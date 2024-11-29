@@ -1,0 +1,50 @@
+### Register root user
+< {%
+  client.global.set("email", "leo@dias.com")
+  client.global.set("password", "NJ9jPvQnNoZpgc_N3huC6")
+%}
+
+POST http://localhost:3333/auth/register/bootstrap
+Content-Type: application/json
+
+{
+  "password": "{{password}}",
+  "phone": "(64) 93814-4245",
+  "lastName": "Dias Santos",
+  "firstName": "Leonardo",
+  "displayName": "Leon",
+  "email": "{{email}}"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Register user
+< {%
+  client.global.set("email", "leo@dias.com")
+  client.global.set("password", "NJ9jPvQnNoZpgc_N3huC6")
+%}
+
+POST http://localhost:3333/auth/register
+Content-Type: application/json
+
+{
+  "password": "{{password}}",
+  "phone": "(64) 93814-4245",
+  "lastName": "Dias Santos",
+  "firstName": "Leonardo",
+  "displayName": "Leon",
+  "email": "{{email}}"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Authorize user
+POST http://localhost:3333/auth/authorize
+Content-Type: application/json
+
+{
+  "password": "{{password}}",
+  "email": "{{email}}"
+}
+
+> {% client.global.set("token", response.body.token); %}

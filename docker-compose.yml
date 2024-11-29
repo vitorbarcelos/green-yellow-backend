@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  greenyellow-backend:
+    container_name: greenyellow-backend
+    hostname: greenyellow-backend
+    env_file: development.env
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app:rw
+      - /app/node_modules
+
+  greenyellow-database:
+    container_name: greenyellow-database
+    hostname: greenyellow-database
+    restart: unless-stopped
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: user-pwd
+      POSTGRES_USER: user
+      POSTGRES_DB: greenyellow
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  greenyellow-adminer:
+    container_name: greenyellow-adminer
+    hostname: greenyellow-adminer
+    restart: unless-stopped
+    image: adminer
+    ports:
+      - "8080:8080"

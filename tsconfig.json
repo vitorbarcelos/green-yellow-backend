@@ -1,0 +1,59 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "strict": false,
+    "outDir": "dist",
+    "module": "ES2022",
+    "target": "ES2022",
+    "sourceMap": false,
+    "incremental": true,
+    "declaration": false,
+    "importHelpers": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "isolatedModules": true,
+    "strictNullChecks": true,
+    "types": ["node", "jest"],
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "moduleResolution": "node",
+    "noImplicitOverride": true,
+    "strictBindCallApply": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "lib": [
+      "ESNext"
+    ],
+    "typeRoots": [
+      "src/app/utils/index.d.ts",
+      "node_modules/@types"
+    ],
+    "paths": {
+      "@crypto/*": ["src/app/common/crypto/*"],
+      "@logger/*": ["src/app/common/logger/*"],
+      "@metrics/*": ["src/app/core/metrics/*"],
+      "@auth/*": ["src/app/core/auth/*"],
+      "@user/*": ["src/app/core/user/*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*spec.ts",
+    "dist",
+    "test"
+  ],
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true
+  }
+}
