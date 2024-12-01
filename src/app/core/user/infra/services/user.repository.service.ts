@@ -3,6 +3,7 @@ import type { UserAdapterInterface } from '@user/infra/contracts/user.adapter.in
 import { FindUserInterface } from '@user/domain/contracts/user.input.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserInterface } from '@user/domain/contracts/user.interface';
+import getPaginationOptions from '@/app/utils/get.pagination.options';
 import { UserRole } from '@user/domain/contracts/user.typings';
 import { UserSchema } from '@user/infra/schemas/user.schema';
 import { UserAdapterService } from './user.adapter.service';
@@ -15,7 +16,6 @@ export class UserRepositoryService implements UserRepositoryInterface {
   @InjectRepository(UserSchema) private readonly userRepository: Repository<UserSchema>;
   @Inject(UserAdapterService) private readonly adapter: UserAdapterInterface;
   private readonly firstElementIndexOf = 0;
-  private readonly defaultMaxResults = 50;
 
   public countByRole(role: UserRole): Promise<number> {
     return this.userRepository.countBy({ role });
@@ -23,7 +23,7 @@ export class UserRepositoryService implements UserRepositoryInterface {
 
   public async findAll(params: FindUserInterface): AsyncPagination<UserInterface> {
     const options = this.adapter.getUserFindOptions<UserSchema>(params);
-    const pagination = this.getPaginationOptions(params);
+    const pagination = getPaginationOptions(params);
     const [users, count] = await this.userRepository.findAndCount({
       take: pagination.maxResults,
       skip: pagination.offset,
@@ -35,7 +35,7 @@ export class UserRepositoryService implements UserRepositoryInterface {
     const totalPages = quotient + (remainder > 0 ? 1 : 0);
 
     return {
-      pageNumber: totalPages ? pagination.pageNumber : 0,
+      pageNumber: totalPages ? pagination.pageNumber : 1,
       items: this.adapter.getManyUserBySchema(users),
       maxResults: pagination.maxResults,
       numResults: users.length,
@@ -79,17 +79,5 @@ export class UserRepositoryService implements UserRepositoryInterface {
     if (response.affected === 1) return user;
     const message = I18n.UserUnauthorized;
     throw new UnauthorizedException(message);
-  }
-
-  private getPaginationOptions(params: FindUserInterface) {
-    const $maxResults = typeof params.maxResults === 'number' ? params.maxResults : this.defaultMaxResults;
-    const maxResults = $maxResults > this.defaultMaxResults ? this.defaultMaxResults : $maxResults;
-    const $pageNumber = typeof params.pageNumber === 'number' ? params.pageNumber : 0;
-    const offset = $pageNumber * maxResults;
-    return {
-      pageNumber: $pageNumber,
-      maxResults,
-      offset,
-    };
   }
 }

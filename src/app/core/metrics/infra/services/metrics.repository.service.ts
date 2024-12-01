@@ -3,7 +3,10 @@ import { CreateMetricsInterface, ExportMetricsReportInterface, FindMetricsInterf
 import { MetricsRepositoryInterface } from '@metrics/domain/contracts/metrics.repository.interface';
 import { SchemasAdapterService } from '@metrics/infra/services/schemas.adapter.service';
 import { MetricsAggregatesType } from '@metrics/domain/contracts/metrics.typings';
+import { ExportMetricsSQL } from '@metrics/infra/queries/export.metrics';
 import { MetricsSchema } from '@metrics/infra/schemas/metrics.schema';
+import getPaginationOptions from '@/app/utils/get.pagination.options';
+import { QueryBuilder } from '@/app/utils/query.builder';
 import { Inject, Injectable } from '@nestjs/common';
 import { removeBom } from '@/app/utils/remove.boom';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,53 +19,50 @@ export class MetricsRepositoryService implements MetricsRepositoryInterface {
   @InjectRepository(MetricsSchema) private readonly metricsRepository: Repository<MetricsSchema>;
   @Inject(SchemasAdapterService) private readonly adapter: SchemasAdapterService;
   private readonly defaultBatchSize = 1000;
-  private readonly defaultMaxResults = 50;
 
   public async findAll(params: FindMetricsInterface): AsyncPagination<FindMetricsOutputInterface> {
-    const groupBy = this.getGroupByFieldByAggregateType(params.aggregateType);
-    const pagination = this.getPaginationOptions(params);
+    const column = this.getGroupByColumnByAggregateType(params.aggregateType);
     const conditionals = this.getConditionals(params);
+    const pagination = getPaginationOptions(params);
 
-    const queryBuilder = this.metricsRepository.createQueryBuilder('metrics')
-      .select([`${groupBy} AS date`, 'SUM(metrics.value) AS value',])
-      .groupBy(groupBy)
-      .orderBy(groupBy, 'ASC')
-      .skip(pagination.offset)
-      .take(pagination.maxResults);
+    const columns = [`${column} AS date`, 'SUM(M.value) AS value'];
+    const queryBuilder = this.metricsRepository.createQueryBuilder('M').select(columns).groupBy(column).orderBy(column, 'ASC').skip(pagination.offset).take(pagination.maxResults);
 
     conditionals.forEach(([condition, parameters]) => {
       queryBuilder.andWhere(condition, parameters);
     });
 
-    const [items, count] = await Promise.all([
-      queryBuilder.getRawMany(),
-      queryBuilder.getCount(),
-    ]);
+    const countBuilder = queryBuilder.clone().orderBy().skip(undefined).take(undefined);
+    const countQuery = `SELECT COUNT(*) FROM (${countBuilder.getSql()})`;
+    const countParameters = Object.values(countBuilder.getParameters());
+
+    const [[count], items] = await Promise.all([this.metricsRepository.query(countQuery, countParameters), queryBuilder.getRawMany()]);
 
     const metrics = items.map((item: any) => {
       return {
         date: item.date,
         value: Number(item.value),
         aggregateType: params.aggregateType,
-        metricId: params.metricId ?? undefined
-      }
+        metricId: params.metricId ?? undefined,
+      };
     });
 
-    const remainder = count % pagination.maxResults;
-    const quotient = (count - remainder) / pagination.maxResults;
+    const remainder = count.count % pagination.maxResults;
+    const quotient = (count.count - remainder) / pagination.maxResults;
     const totalPages = quotient + (remainder > 0 ? 1 : 0);
 
     return {
-      pageNumber: totalPages ? pagination.pageNumber + 1 : 1,
+      pageNumber: totalPages ? pagination.pageNumber : 1,
       maxResults: pagination.maxResults,
       numResults: metrics.length,
       totalPages: totalPages,
       items: metrics,
-    }
+    };
   }
 
-  public export(params: ExportMetricsReportInterface): Promise<ExportMetricsReportOutputInterface[]> {
-    return Promise.resolve([]);
+  public async export(params: ExportMetricsReportInterface): Promise<ExportMetricsReportOutputInterface[]> {
+    const query = QueryBuilder.buildConditionals(ExportMetricsSQL, this.getConditionals(params));
+    return this.metricsRepository.query(query);
   }
 
   public async save(file: Buffer): Promise<CreateMetricsOutputInterface> {
@@ -105,37 +105,25 @@ export class MetricsRepositoryService implements MetricsRepositoryInterface {
     });
   }
 
-  private getPaginationOptions(params: FindMetricsInterface) {
-    const $maxResults = typeof params.maxResults === 'number' ? params.maxResults : this.defaultMaxResults;
-    const maxResults = $maxResults > this.defaultMaxResults ? this.defaultMaxResults : $maxResults;
-    const $pageNumber = typeof params.pageNumber === 'number' ? params.pageNumber : 0;
-    const offset = $pageNumber * maxResults;
-    return {
-      pageNumber: $pageNumber,
-      maxResults,
-      offset,
-    };
-  }
-
-  private getConditionals(params: FindMetricsInterface): [string, Record<string, any>][] {
+  private getConditionals(params: FindMetricsInterface | ExportMetricsReportInterface): [string, Record<string, any>][] {
     const conditionals: [string, Record<string, any>][] = [];
-    if (params.initialDate) conditionals.push(['metrics.date_time::date >= :initialDate', { initialDate: params.initialDate },]);
-    if (params.finalDate) conditionals.push(['metrics.date_time::date <= :finalDate', { finalDate: params.finalDate },]);
-    if (params.metricId) conditionals.push(['metrics.metric_id = :metricId', { metricId: params.metricId },]);
+    if (params.initialDate) conditionals.push(['"M"."date_time"::date >= :initialDate', { initialDate: params.initialDate }]);
+    if (params.finalDate) conditionals.push(['"M"."date_time"::date <= :finalDate', { finalDate: params.finalDate }]);
+    if (params.metricId) conditionals.push(['"M"."metric_id" = :metricId', { metricId: params.metricId }]);
     return conditionals;
   }
 
-  private getGroupByFieldByAggregateType(aggregateType: MetricsAggregatesType): string {
+  private getGroupByColumnByAggregateType(aggregateType: MetricsAggregatesType): string {
     switch (aggregateType) {
       case MetricsAggregatesType.Year: {
-        return "TO_CHAR(metrics.date_time, 'YYYY')";
+        return "TO_CHAR(M.date_time, 'YYYY')";
       }
       case MetricsAggregatesType.Month: {
-        return "TO_CHAR(metrics.date_time, 'YYYY-MM')";
+        return "TO_CHAR(M.date_time, 'YYYY-MM')";
       }
       case MetricsAggregatesType.Day:
       default: {
-        return "TO_CHAR(metrics.date_time, 'YYYY-MM-DD')";
+        return "TO_CHAR(M.date_time, 'YYYY-MM-DD')";
       }
     }
   }

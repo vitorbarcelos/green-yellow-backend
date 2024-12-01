@@ -11,9 +11,9 @@ export interface FindAggregatedMetricsInterface {
 }
 
 export interface ExportMetricsReportInterface {
-  dateInitial: string;
-  finalDate: string;
-  metricId: number;
+  dateInitial?: string;
+  finalDate?: string;
+  metricId?: number;
 }
 
 export interface UploadMetricsInterface {

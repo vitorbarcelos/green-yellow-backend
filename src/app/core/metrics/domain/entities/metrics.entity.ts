@@ -1,6 +1,5 @@
 import { MetricsInterface } from '@metrics/domain/contracts/metrics.interface';
 import { instanceToPlain } from 'class-transformer';
-import { PrimaryGeneratedColumn } from 'typeorm';
 
 export class MetricsEntity implements MetricsInterface {
   public readonly metricId: number;

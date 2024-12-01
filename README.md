@@ -3,19 +3,17 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-
 ## GreenYellow
 
 Backend of GreenYellow
 
-
 ### Running the app
 
-Para executar o projeto, é necessário ter o Docker e o Docker Compose instalados no seu ambiente. O Dockerfile e o Docker-compose.yml contêm as especificações dos containers necessários para a execução dele. Vale a pena conferir esses arquivos.
+To run the project, you need to have Docker and Docker Compose installed on your environment. The Dockerfile and docker-compose.yml files contain the specifications of the containers needed to run it. It's worth checking out these files.
 
-Insira os seguintes comandos no seu terminal para iniciar o backend no modo **Desenvolvimento**:
-</br>1 - Para iniciar o backend no modo **Desenvolvimento**;
-</br>2 - Para ver os logs da aplicação em tempo real.
+Use the following commands in your terminal to start the backend in **Development** mode:
+</br>1 - To start the backend in **Development** mode;
+</br>2 - To view the application logs in real-time.
 
 ```bash
 # Development
@@ -25,12 +23,10 @@ Insira os seguintes comandos no seu terminal para iniciar o backend no modo **De
 
 ```
 
-</br>
-
-Insira os seguintes comandos no seu terminal para iniciar o backend no modo **Produção**:
-</br>1 - Para criar uma imagem a partir da especificação do Dockerfile;
-</br>2 - Para criar um container a partir da imagem criada;
-</br>3 - Para ver os logs da aplicação em tempo real.
+Use the following commands in your terminal to start the backend in **Production** mode:
+</br>1 - To build an image from the Dockerfile specification;
+</br>2 - To create a container from the built image;
+</br>3 - To view the application logs in real-time.
 </br>
 </br>
 
@@ -46,25 +42,17 @@ greenyellow-backend:latest
 
 ```
 
-O item **[...]** indica que outras variáveis de ambiente devem ser adicionadas ao container. Se isso não for realizado, o projeto não será iniciado. Veja mais detalhes no arquivo de [variáveis de ambiente](/development.env).
+The **[...]** item indicates that additional environment variables should be added to the container. If this is not done, the project will not start. For more details, refer to the [environment variables](/development.env) file.
 
-### Http Requests
+### Documentation
+The API documentation is available on Swagger, accessible via:
 
-Os arquivos de requisições da aplicação estão armazenados na pasta **/requests**. Sinta-se à vontade para exportar para uma plataforma que você goste, como o Postman e o Insomnia. Esses arquivos foram criados para usar no WebStorm da JetBrains.
+http://localhost:3333/docs
 
-```http
-### Authorize user sample
-POST http://localhost:3333/auth/authorize
-Content-Type: application/json
-
-{
-  "password": "{{password}}",
-  "email": "{{email}}"
-}
-```
+In Swagger, you will find details about the application’s modules and endpoints, including the available HTTP methods, input parameters, and responses for each endpoint.
 
 ### Tests
-O projeto contém algumas coleções de testes unitários. Os testes de ponta-ponta não foram implementados devido a um prazo curto, todavia, houve um grande interesse em criá-los. Para executar os testes automatizados, insira os seguintes comandos no seu terminal:
+The project includes some unit test collections. End-to-end tests were not implemented due to a short deadline; however, there was strong interest in creating them. To run the automated tests, use the following commands in your terminal:
 
 ```bash
 # Unit

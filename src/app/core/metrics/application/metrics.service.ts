@@ -1,5 +1,5 @@
+import { AggregatedMetricsOutputInterface, ExportMetricsReportOutputInterface, UploadMetricsOutputInterface } from './contracts/metrics.output.interface';
 import { FindAggregatedMetricsInterface, UploadMetricsInterface } from '@metrics/application/contracts/metrics.input.interface';
-import { AggregatedMetricsOutputInterface, UploadMetricsOutputInterface } from './contracts/metrics.output.interface';
 import type { MetricsDomainServiceInterface } from '@metrics/domain/contracts/metrics.domain.service.interface';
 import type { MetricsAdapterInterface } from '@metrics/application/contracts/metrics.adapter.interface';
 import { ExportMetricsReportInterface } from '@metrics/application/contracts/metrics.input.interface';
@@ -31,7 +31,7 @@ export class MetricsService implements MetricsServiceInterface {
     });
   }
 
-  public async exportMetricsReport(params: ExportMetricsReportInterface): Promise<any> {
+  public async exportMetricsReport(params: ExportMetricsReportInterface): Promise<ExportMetricsReportOutputInterface> {
     const args = this.adapter.toExportMetrics(params);
     const response = await this.metrics.export(args);
     return this.adapter.toExportedMetrics(response);

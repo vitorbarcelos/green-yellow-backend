@@ -12,7 +12,7 @@ export interface CreateMetricsOutputInterface {
 }
 
 export interface ExportMetricsReportOutputInterface {
-  date: Date;
+  date: string;
   metricId: number;
   aggregatedDay: number;
   aggregatedMonth: number;

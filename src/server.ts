@@ -8,6 +8,7 @@ import { AppModule } from './app/app.module';
 import cors, { CorsOptions } from 'cors';
 import morgan, { Options } from 'morgan';
 import bodyParser from 'body-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export class Server {
   private express: Express;
@@ -60,6 +61,7 @@ export class Server {
       transform: true,
     });
 
+    this.enableSwaggerDocumentation();
     this.enableRequestLogger();
     this.enableCorsRequest();
 
@@ -87,6 +89,21 @@ export class Server {
         write,
       },
     };
+  }
+
+  private enableSwaggerDocumentation(): void {
+    const builder = new DocumentBuilder();
+
+    builder.setDescription('The GreenYellow Backend');
+    builder.setTitle('GreenYellow Backend');
+    builder.setVersion('1.0');
+    builder.addBearerAuth();
+
+    const config = builder.build();
+    const document = () => SwaggerModule.createDocument(this.app, config);
+    SwaggerModule.setup('docs', this.app, document, {
+      jsonDocumentUrl: 'docs/json',
+    });
   }
 
   private enableCorsRequest(): void {

@@ -8,9 +8,6 @@ export interface UploadMetricsOutputInterface {
 }
 
 export interface ExportMetricsReportOutputInterface {
-  date: string;
-  metricId: number;
-  aggMonth: number;
-  aggYear: number;
-  aggDay: number;
+  file: ArrayBuffer;
+  fileName: string;
 }

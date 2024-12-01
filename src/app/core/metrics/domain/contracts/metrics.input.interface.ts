@@ -16,7 +16,7 @@ export interface CreateMetricsInterface {
 }
 
 export interface ExportMetricsReportInterface {
-  initialDate: string;
-  finalDate: string;
-  metricId: number;
+  initialDate?: string;
+  finalDate?: string;
+  metricId?: number;
 }

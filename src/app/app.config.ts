@@ -5,6 +5,7 @@ export const configs = {
   port: Number(process.env['PORT']),
   hostname: process.env['HOST_NAME'],
   environment: process.env['NODE_ENV'],
+  employerName: process.env['EMPLOYER_NAME'],
   database: {
     host: process.env['DATABASE_HOST'],
     name: process.env['DATABASE_NAME'],
