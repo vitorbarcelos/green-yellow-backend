@@ -15,6 +15,6 @@ export const QueryBuilder = {
       }
     }
 
-    return clauses ? `${query} ${clauses}` : query;
+    return clauses ? query.replace(/:WHERE/g, clauses) : query.replace(/:WHERE/g, '');
   },
 };

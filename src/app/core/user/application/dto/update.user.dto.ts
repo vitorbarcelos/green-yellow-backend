@@ -4,23 +4,23 @@ import { UserRole } from '@user/domain/contracts/user.typings';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUser implements UpdateUserInterface {
-  @ApiProperty({ description: 'The display name of the user.', example: 'João', required: true })
+  @ApiProperty({ description: 'The display name of the user.', example: 'Edu', required: true })
   @IsString() @IsNotEmpty() @MaxLength(255)
   public displayName: string;
 
-  @ApiProperty({ description: 'The phone number of the user.', example: '+55 (82) 98888-8888', required: true })
+  @ApiProperty({ description: 'The phone number of the user.', example: '+55 (82) 99999-9999', required: true })
   @IsString() @IsNotEmpty() @IsPhoneNumber('BR')
   public phone: string;
 
-  @ApiProperty({ description: 'The first name of the user.', example: 'João', required: true })
+  @ApiProperty({ description: 'The first name of the user.', example: 'Eduarda', required: true })
   @IsString() @IsNotEmpty() @MaxLength(255)
   public firstName: string;
 
-  @ApiProperty({ description: 'The last name of the user.', example: 'Gomes', required: true })
+  @ApiProperty({ description: 'The last name of the user.', example: 'Diniz', required: true })
   @IsString() @IsNotEmpty() @MaxLength(255)
   public lastName: string;
 
-  @ApiProperty({ description: 'The email address of the user.', example: 'joao.gomes@example.com', required: true })
+  @ApiProperty({ description: 'The email address of the user.', example: 'eduarda.diniz@example.com', required: true })
   @IsString() @IsNotEmpty() @IsEmail()
   public email: string;
 
@@ -34,23 +34,23 @@ export class UpdateUser implements UpdateUserInterface {
 }
 
 export class UpdateProfileUser implements UpdateUserInterface {
-  @ApiProperty({ description: 'The display name of the user.', example: 'João', required: true })
+  @ApiProperty({ description: 'The display name of the user.', example: 'Edu', required: true })
   @IsString() @IsNotEmpty() @MaxLength(255)
   public displayName: string;
 
-  @ApiProperty({ description: 'The phone number of the user.', example: '+55 (82) 98888-8888', required: true })
+  @ApiProperty({ description: 'The phone number of the user.', example: '+55 (82) 99999-9999', required: true })
   @IsString() @IsNotEmpty() @IsPhoneNumber('BR')
   public phone: string;
 
-  @ApiProperty({ description: 'The first name of the user.', example: 'João', required: true })
+  @ApiProperty({ description: 'The first name of the user.', example: 'Eduarda', required: true })
   @IsString() @IsNotEmpty() @MaxLength(255)
   public firstName: string;
 
-  @ApiProperty({ description: 'The last name of the user.', example: 'Gomes', required: true })
+  @ApiProperty({ description: 'The last name of the user.', example: 'Diniz', required: true })
   @IsString() @IsNotEmpty() @MaxLength(255)
   public lastName: string;
 
-  @ApiProperty({ description: 'The email address of the user.', example: 'joao.gomes@example.com', required: true })
+  @ApiProperty({ description: 'The email address of the user.', example: 'eduarda.diniz@example.com', required: true })
   @IsString() @IsNotEmpty() @IsEmail()
   public email: string;
 }

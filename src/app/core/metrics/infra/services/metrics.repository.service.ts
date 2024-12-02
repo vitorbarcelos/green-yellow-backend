@@ -1,4 +1,4 @@
-import { CreateMetricsOutputInterface, ExportMetricsReportOutputInterface, FindMetricsOutputInterface } from '@metrics/domain/contracts/metrics.output.interface';
+import { CreateMetricsOutputInterface, DeleteMetricsOutputInterface, ExportMetricsReportOutputInterface, FindMetricsOutputInterface, } from '@metrics/domain/contracts/metrics.output.interface';
 import { CreateMetricsInterface, ExportMetricsReportInterface, FindMetricsInterface } from '@metrics/domain/contracts/metrics.input.interface';
 import { MetricsRepositoryInterface } from '@metrics/domain/contracts/metrics.repository.interface';
 import { SchemasAdapterService } from '@metrics/infra/services/schemas.adapter.service';
@@ -58,6 +58,14 @@ export class MetricsRepositoryService implements MetricsRepositoryInterface {
       totalPages: totalPages,
       items: metrics,
     };
+  }
+
+  public async deleteAll(): Promise<DeleteMetricsOutputInterface> {
+    const response = await this.metricsRepository.delete({});
+    const deletedMetrics = Number(response.affected);
+    return {
+      deletedMetrics
+    }
   }
 
   public async export(params: ExportMetricsReportInterface): Promise<ExportMetricsReportOutputInterface[]> {

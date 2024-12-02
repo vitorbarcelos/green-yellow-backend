@@ -1,3 +1,4 @@
+import { ExportMetricsReportOutputInterface } from '@metrics/domain/contracts/metrics.output.interface';
 import { SchemasAdapterInterface } from '@metrics/infra/contracts/schemas.adapter.interface';
 import { CreateMetricsInterface } from '@metrics/domain/contracts/metrics.input.interface';
 import { MetricsSchema } from '@metrics/infra/schemas/metrics.schema';
@@ -16,6 +17,18 @@ export class SchemasAdapterService implements SchemasAdapterInterface {
         date_time: dateTime,
         id: 0,
       });
+    });
+  }
+
+  public getExportMetricsReportOutput(metrics: ExportMetricsReportOutputInterface[]): ExportMetricsReportOutputInterface[] {
+    return metrics.map((metric) => {
+      return {
+        aggregatedMonth: Number(metric.aggregatedMonth),
+        aggregatedYear: Number(metric.aggregatedYear),
+        aggregatedDay: Number(metric.aggregatedDay),
+        metricId: Number(metric.metricId),
+        date: metric.date,
+      }
     });
   }
 }

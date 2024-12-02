@@ -1,29 +1,29 @@
 import process from 'node:process';
 
 export const configs = {
-  host: process.env['HOST'],
-  port: Number(process.env['PORT']),
-  hostname: process.env['HOST_NAME'],
-  environment: process.env['NODE_ENV'],
-  employerName: process.env['EMPLOYER_NAME'],
+  host: process.env['HOST'] || 'http://localhost:3333',
+  port: Number(process.env['PORT']) || 3333,
+  hostname: process.env['HOST_NAME'] || 'http://localhost',
+  environment: process.env['NODE_ENV'] || 'development',
+  employerName: process.env['EMPLOYER_NAME'] || 'GreenYellow',
   database: {
-    host: process.env['DATABASE_HOST'],
-    name: process.env['DATABASE_NAME'],
-    dialect: process.env['DATABASE_DIALECT'],
-    port: Number(process.env['DATABASE_PORT']),
-    password: process.env['DATABASE_PASSWORD'],
-    username: process.env['DATABASE_USERNAME'],
+    name: process.env['DATABASE_NAME'] || 'greenyellow',
+    dialect: process.env['DATABASE_DIALECT'] || 'postgres',
+    port: Number(process.env['DATABASE_PORT']) || 5432,
+    password: process.env['DATABASE_PASSWORD'] || 'user-pwd',
+    username: process.env['DATABASE_USERNAME'] || 'user',
+    host: process.env['DATABASE_HOST'] || 'localhost',
   },
   auth: {
     jwt: {
-      issuer: process.env['AUTH_JWT_ISSUER'],
-      secret: process.env['AUTH_JWT_SECRET'],
-      audience: process.env['AUTH_JWT_AUDIENCE'],
+      issuer: process.env['AUTH_JWT_ISSUER'] || 'http://localhost:3333',
+      secret: process.env['AUTH_JWT_SECRET'] || 'UvqQY6GJbnEmmBzQkF6hl',
+      audience: process.env['AUTH_JWT_AUDIENCE'] || 'http://localhost:3333',
     },
   },
   crypto: {
     bcrypt: {
-      rounds: process.env['CRYPTO_BCRYPT_ROUNDS'],
+      rounds: Number(process.env['CRYPTO_BCRYPT_ROUNDS']) || 14,
     },
   },
 };

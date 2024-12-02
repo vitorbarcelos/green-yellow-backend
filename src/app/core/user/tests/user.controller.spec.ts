@@ -16,6 +16,7 @@ import { CryptoModule } from '@crypto/crypto.module';
 import { LoggerModule } from '@logger/logger.module';
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { jest } from '@jest/globals';
 
 describe('UserController', () => {
   let userDomainService: UserDomainServiceInterface;
@@ -35,7 +36,7 @@ describe('UserController', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [UserController],
-      imports: [CryptoModule, LoggerModule.forRoot(), ConfigModule.forRoot({ isGlobal: true })],
+      imports: [CryptoModule, LoggerModule.forRoot(), await ConfigModule.forRoot({ isGlobal: true })],
       providers: [{ provide: getRepositoryToken(UserSchema), useFactory: jest.fn }, UserInfraAdapterService, UserRepositoryService, UserAdapterService, UserDomainService, UserService],
     }).compile();
 

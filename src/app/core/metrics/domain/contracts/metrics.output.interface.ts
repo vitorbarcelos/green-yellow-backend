@@ -11,6 +11,10 @@ export interface CreateMetricsOutputInterface {
   createdMetrics: number;
 }
 
+export interface DeleteMetricsOutputInterface {
+  deletedMetrics: number;
+}
+
 export interface ExportMetricsReportOutputInterface {
   date: string;
   metricId: number;

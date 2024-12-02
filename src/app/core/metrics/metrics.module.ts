@@ -10,6 +10,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
   controllers: [MetricsController],
+  exports: [MetricsDomainService, MetricsService],
   imports: [TypeOrmModule.forFeature([MetricsSchema])],
   providers: [MetricsRepositoryService, SchemasAdapterService, MetricsAdapterService, MetricsDomainService, MetricsService],
 })

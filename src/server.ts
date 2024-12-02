@@ -33,6 +33,8 @@ export class Server {
     const port = this.port || this.defaultPort;
     return this.app.listen(port, () => {
       this.logger.log(`Application is running on: ${this.host}`, this.context);
+      this.logger.log(`Documentation is available at: ${this.host}/docs`, this.context);
+      this.logger.log(`Connect with the author on LinkedIn: https://www.linkedin.com/in/vitorbarcelos`, this.context);
       this.logger.log(`Node Environment: ${this.environment}`, this.context);
     });
   }

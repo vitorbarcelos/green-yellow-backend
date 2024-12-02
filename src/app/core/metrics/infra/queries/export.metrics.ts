@@ -16,4 +16,6 @@ FROM "Metrics" AS "M"
   SELECT "MetricsYear"."metric_id" AS metricId, TO_CHAR("MetricsYear"."date_time", 'YYYY') AS date, SUM("MetricsYear".value) AS value
   FROM "Metrics" AS "MetricsYear" GROUP BY "MetricsYear"."metric_id", TO_CHAR("MetricsYear"."date_time", 'YYYY')) AS "Year"
   ON  "M"."metric_id" = "Year".metricId AND TO_CHAR( "M"."date_time", 'YYYY') = "Year".date
+:WHERE
+ORDER BY "M"."metric_id" ASC, TO_CHAR("M"."date_time", 'DD/MM/YYYY') ASC
 `;

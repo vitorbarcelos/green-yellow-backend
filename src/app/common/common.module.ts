@@ -7,7 +7,6 @@ import { LoggerModule } from '@logger/logger.module';
 import { DatabaseConfig } from '@/app/app.typings';
 import { configs } from '@/app/app.config';
 import { Module } from '@nestjs/common';
-
 @Module({
   imports: [
     CryptoModule,
